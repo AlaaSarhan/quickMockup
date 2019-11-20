@@ -105,7 +105,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function createApp( canvasContainerId, width, height ) {
     const canvas = new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.Canvas( canvasContainerId, width, height )
-
+    canvas.setScrollArea('#'+canvasContainerId)
     return {
         canvas,
         elements: _lib_elements__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -64186,4 +64186,4 @@ _packages2.default.util.spline.Spline = Class.extend({
 /***/ })
 
 /******/ });
-//# sourceMappingURL=libqmock-c6bc2f1219d1ee2f214a.js.map
+//# sourceMappingURL=libqmock-cf91cc219150643297c1.js.map
