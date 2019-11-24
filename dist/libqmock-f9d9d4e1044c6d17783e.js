@@ -106,12 +106,58 @@ __webpack_require__.r(__webpack_exports__);
 function createApp( canvasContainerId, width, height ) {
     const canvas = new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.Canvas( canvasContainerId, width, height )
     canvas.setScrollArea('#'+canvasContainerId)
+
+    canvas.installEditPolicy(new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.policy.canvas.CanvasPolicy({
+        onMouseDown: function(canvas) {
+            const selection = canvas.getSelection()
+
+            if (selection) {
+                selection.each(function (i, figure) { figure.toFront() } )
+            }
+        }
+    }))
+
     return {
         canvas,
         elements: _lib_elements__WEBPACK_IMPORTED_MODULE_1__["default"],
         draw2d: (_sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default())
     }
 }
+
+
+/***/ }),
+
+/***/ "./draw2d/shape/composite/StrongRaft.js":
+/*!**********************************************!*\
+  !*** ./draw2d/shape/composite/StrongRaft.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sarhanalaa/draw2d */ "./node_modules/@sarhanalaa/draw2d/dist/draw2d.js");
+/* harmony import */ var _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/**
+ * This is a raft that has a slightly stronger influence on its aboard figures.
+ *
+ * Concretely, this means:
+ * - it brings aboard elements toFront as well when toFront is called on the raft element
+ *
+ * The need for this extension might completely deminish if we switch to using
+ * strong composition or child relationship for containment relationship.
+ */
+/* harmony default export */ __webpack_exports__["default"] = (_sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.shape.composite.Raft.extend({
+    toFront: function (figure) {
+        const aboardFigures = this.getAboardFigures(this.isInDragDrop)
+
+        this._super(figure)
+
+        aboardFigures.each(function(i, figure) { figure.toFront() })
+    }
+}));
 
 
 /***/ }),
@@ -127,6 +173,8 @@ function createApp( canvasContainerId, width, height ) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sarhanalaa/draw2d */ "./node_modules/@sarhanalaa/draw2d/dist/draw2d.js");
 /* harmony import */ var _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _draw2d_shape_composite_StrongRaft__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../draw2d/shape/composite/StrongRaft */ "./draw2d/shape/composite/StrongRaft.js");
+
 
 
 const titleLabelEditor = new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.ui.LabelInplaceEditor()
@@ -138,7 +186,7 @@ const createWindow = ({
     titleBarBgColor = '#999',
     width = 640,
 }) => {
-    const window = new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.shape.composite.Raft({
+    const window = new _draw2d_shape_composite_StrongRaft__WEBPACK_IMPORTED_MODULE_1__["default"]({
         stroke: 1,
         width,
         height
@@ -64186,4 +64234,4 @@ _packages2.default.util.spline.Spline = Class.extend({
 /***/ })
 
 /******/ });
-//# sourceMappingURL=libqmock-cf91cc219150643297c1.js.map
+//# sourceMappingURL=libqmock-f9d9d4e1044c6d17783e.js.map
