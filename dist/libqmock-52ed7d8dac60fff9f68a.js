@@ -109,10 +109,9 @@ function createApp( canvasContainerId, width, height ) {
 
     canvas.installEditPolicy(new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.policy.canvas.CanvasPolicy({
         onMouseDown: function(canvas) {
-            const selection = canvas.getSelection()
-
-            if (selection) {
-                selection.each(function (i, figure) { figure.toFront() } )
+            const selectedFigure = canvas.getPrimarySelection()
+            if (selectedFigure && selectedFigure !== canvas.getFigures().last()) {
+                canvas.getPrimarySelection().toFront()
             }
         }
     }))
@@ -127,10 +126,10 @@ function createApp( canvasContainerId, width, height ) {
 
 /***/ }),
 
-/***/ "./draw2d/shape/composite/StrongRaft.js":
-/*!**********************************************!*\
-  !*** ./draw2d/shape/composite/StrongRaft.js ***!
-  \**********************************************/
+/***/ "./draw2d/shape/composite/Container.js":
+/*!*********************************************!*\
+  !*** ./draw2d/shape/composite/Container.js ***!
+  \*********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -141,23 +140,62 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * This is a raft that has a slightly stronger influence on its aboard figures.
  *
- * Concretely, this means:
- * - it brings aboard elements toFront as well when toFront is called on the raft element
- *
- * The need for this extension might completely deminish if we switch to using
- * strong composition or child relationship for containment relationship.
  */
-/* harmony default export */ __webpack_exports__["default"] = (_sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.shape.composite.Raft.extend({
-    toFront: function (figure) {
-        const aboardFigures = this.getAboardFigures(this.isInDragDrop)
+const Container = _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.shape.composite.StrongComposite.extend({
+    assignFigure: function (figure) {
+        this.assignedFigures.add(figure)
+        figure.setComposite(this)
+        return this
+    },
 
+    unassignFigure: function (figure) {
+        this.assignedFigures.remove(figure)
+        figure.setComposite(null)
+        return this
+    },
+
+    onDragLeave: function(figure) {
+        this.unassignFigure(figure)
+    },
+
+    onCatch: function (droppedFigure, x, y, shiftKey, ctrlKey) {
+        if (droppedFigure.getComposite()) {
+            return
+        }
+
+        if (this.getBoundingBox().contains(droppedFigure.getBoundingBox())) {
+            this.assignFigure(droppedFigure)
+        }
+    },
+
+    setPosition: function (x, y) {
+        let oldX = this.x
+        let oldY = this.y
+
+        this._super(x, y)
+
+        let dx = this.x - oldX
+        let dy = this.y - oldY
+
+        if (dx === 0 && dy === 0) {
+          return this
+        }
+
+        this.assignedFigures.each(function (i, figure) {
+            figure.translate(dx, dy)
+        })
+
+        return this
+    },
+
+    toFront: function(figure) {
         this._super(figure)
-
-        aboardFigures.each(function(i, figure) { figure.toFront() })
     }
-}));
+
+})
+
+/* harmony default export */ __webpack_exports__["default"] = (Container);
 
 
 /***/ }),
@@ -173,7 +211,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sarhanalaa/draw2d */ "./node_modules/@sarhanalaa/draw2d/dist/draw2d.js");
 /* harmony import */ var _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _draw2d_shape_composite_StrongRaft__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../draw2d/shape/composite/StrongRaft */ "./draw2d/shape/composite/StrongRaft.js");
+/* harmony import */ var _draw2d_shape_composite_Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../draw2d/shape/composite/Container */ "./draw2d/shape/composite/Container.js");
 
 
 
@@ -186,33 +224,25 @@ const createWindow = ({
     titleBarBgColor = '#999',
     width = 640,
 }) => {
-    const window = new _draw2d_shape_composite_StrongRaft__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    const window = new _draw2d_shape_composite_Container__WEBPACK_IMPORTED_MODULE_1__["default"]({
+        bgColor: 'rgba(255, 255, 255, .5)',
         stroke: 1,
         width,
         height
     })
 
-    const titleBar = new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.shape.basic.Rectangle({
+    const titleBarLabel = new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.shape.basic.Label({
         bgColor: titleBarBgColor,
+        text: title,
+        fontColor: titleBarColor,
         stroke: 0,
         height: 24,
         width
     })
 
-    const titleBarLabel = new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.shape.basic.Label({
-        text: title,
-        fontColor: titleBarColor,
-        stroke: 0
-    })
+    window.add(titleBarLabel, new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.layout.locator.XYAbsPortLocator(0, 0))
 
-    window.add(titleBar, new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.layout.locator.XYRelPortLocator(0, 0))
-    window.add(titleBarLabel, new _sarhanalaa_draw2d__WEBPACK_IMPORTED_MODULE_0___default.a.layout.locator.XYRelPortLocator(0, 0))
-
-    window.on('change:dimension', (_, { value: { width } }) => {
-        titleBar.setDimension(width, titleBar.getHeight());
-    })
-
-    titleBar.on('dblclick', () => { titleLabelEditor.start(titleBarLabel) })
+    window.on('dblclick', () => { titleLabelEditor.start(titleBarLabel) })
 
     return window
 }
@@ -64234,4 +64264,4 @@ _packages2.default.util.spline.Spline = Class.extend({
 /***/ })
 
 /******/ });
-//# sourceMappingURL=libqmock-f9d9d4e1044c6d17783e.js.map
+//# sourceMappingURL=libqmock-52ed7d8dac60fff9f68a.js.map
