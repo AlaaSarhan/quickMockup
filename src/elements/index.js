@@ -1,5 +1,5 @@
-import createWindow from './Window'
+import Window from './Window'
 
 export default {
-    createWindow
+    Window
 }

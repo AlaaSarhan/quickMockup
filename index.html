@@ -18,15 +18,18 @@
         }
 
         .quickMock__toolbar {
-            border-bottom: 1px solid grey;
-            padding: 16px;
-            height: 40px;
+            border-right: 1px solid grey;
+            display: inline-block;
+            width: 256px;
+            height: 100vh;
         }
 
         .quickMock__canvas {
-            width: 1000px;
-            height: 1000px;
+            display: inline-block;
             position: absolute;
+            left: 256px;
+            width: calc(100vw - 256px);
+            height: 100vh;
             overflow: scroll;
         }
     </style>
@@ -35,27 +38,33 @@
     <div id="toolbar" class="quickMock__toolbar"></div>
     <div id="canvas" class="quickMock__canvas"></div>
 
-    <script type="text/javascript" src="lib/libqmock.js"></script>
+    <script type="text/javascript" src="/dist/libqmock.js"></script>
     <script type="text/javascript">
     document.addEventListener( 'DOMContentLoaded', function () {
-        const { canvas, elements } = LibQMock.createApp('canvas', 1000, 1000)
-
-        const win = elements.createWindow({ title: "I'm window", width: 400, height: 400 })
-        const win2 = elements.createWindow({ title: "I'm inside window", width: 200, height: 200 })
-        canvas.add(win2, 200, 200)
-        canvas.add(win, 100, 100)
-        canvas.add(new draw2d.shape.basic.Label({ text: "I'm inside inner window", bgColor: 'grey'}), 230, 230)
+        // canvas
+        const app = new LibQMock('canvas')
+        const win = new app.elements.Window({ title: "I'm window", width: 400, height: 400 })
+        const win2 = new app.elements.Window({ title: "I'm inside window", width: 200, height: 200 })
+        app.canvas.add(win2.main, 200, 200)
+        app.canvas.add(win.main, 100, 100)
+        app.canvas.add(new draw2d.shape.basic.Label({ text: "I'm inside inner window", bgColor: 'grey'}), 230, 230)
 
 
         window.addEventListener('keyup', (e) => {
             switch(e.key) {
                 case 'y':
-                    e.ctrlKey && canvas.getCommandStack().redo()
+                    e.ctrlKey && app.canvas.getCommandStack().redo()
                     break
                 case 'z':
-                    e.ctrlKey && canvas.getCommandStack().undo()
+                    e.ctrlKey && app.canvas.getCommandStack().undo()
                     break
             }
+        })
+
+        // toolbar
+        const toolbar = new draw2d.Canvas('toolbar')
+
+        Object.keys(app.elements).forEach(key => {
         })
     } )
     </script>

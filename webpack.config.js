@@ -29,20 +29,19 @@ module.exports = {
 
 	output: {
 		filename: 'libqmock.js',
-		path: path.resolve(__dirname, './lib'),
 		libraryTarget: 'var',
+		libraryExport: 'default',
 		library: 'LibQMock'
-	},
-
-	devtool: 'source-map',
-
-	devServer: {
-		contentBase: './lib'
 	},
 
 	plugins: [
 		new webpack.ProgressPlugin(),
 	],
+
+	devServer: {
+		contentBase: [ path.resolve(__dirname, './lib'), path.resolve(__dirname) ],
+		writeToDisk: true
+	},
 
 	module: {
 		rules: [
