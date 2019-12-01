@@ -25,11 +25,11 @@ const webpack = require('webpack');
 
 module.exports = {
 	mode: 'development',
-	entry: './index.js',
+	entry: './src/index.js',
 
 	output: {
 		filename: 'libqmock.js',
-		path: path.resolve(__dirname, '../lib'),
+		path: path.resolve(__dirname, './lib'),
 		libraryTarget: 'var',
 		library: 'LibQMock'
 	},
@@ -37,7 +37,7 @@ module.exports = {
 	devtool: 'source-map',
 
 	devServer: {
-		contentBase: '../lib'
+		contentBase: './lib'
 	},
 
 	plugins: [
