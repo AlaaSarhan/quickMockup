@@ -1,5 +1,4 @@
-import draw2d from '@sarhanalaa/draw2d'
-import Container from '../draw2d/shape/composite/Container'
+import Container from '../shape/composite/Container'
 
 const titleLabelEditor = new draw2d.ui.LabelInplaceEditor()
 

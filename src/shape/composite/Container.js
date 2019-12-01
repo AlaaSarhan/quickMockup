@@ -1,8 +1,3 @@
-import draw2d from '@sarhanalaa/draw2d'
-
-/**
- *
- */
 const Container = draw2d.shape.composite.StrongComposite.extend({
     assignFigure: function (figure) {
         this.assignedFigures.add(figure)

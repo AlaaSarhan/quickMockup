@@ -14,10 +14,6 @@ const webpack = require('webpack');
  *
  */
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-
 /*
  * We've enabled HtmlWebpackPlugin for you! This generates a html
  * page for you when you compile webpack, which will make you start
@@ -32,8 +28,8 @@ module.exports = {
 	entry: './index.js',
 
 	output: {
-		filename: 'libqmock-[chunkHash].js',
-		path: path.resolve(__dirname, '../dist'),
+		filename: 'libqmock.js',
+		path: path.resolve(__dirname, '../lib'),
 		libraryTarget: 'var',
 		library: 'LibQMock'
 	},
@@ -41,16 +37,11 @@ module.exports = {
 	devtool: 'source-map',
 
 	devServer: {
-		contentBase: '../dist'
+		contentBase: '../lib'
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(),
 		new webpack.ProgressPlugin(),
-		new HtmlWebpackPlugin({
-			template: 'demo.ejs'
-		}),
-		new CopyPlugin([ { from: './jquery', to: '../dist'} ])
 	],
 
 	module: {
