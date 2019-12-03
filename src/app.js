@@ -13,6 +13,13 @@ function QuickMockupCanvas(canvasContainerId, width, height) {
             }
         }
     }))
+
+    this.createNewElementFromDrop = (canvas, { key, event }) => {
+        const element = new elements[key]({})
+        canvas.add(element.figure, 100, 200)
+    }
+
+    this.canvas.on('newElementDrop', this.createNewElementFromDrop)
 }
 
 export default QuickMockupCanvas
