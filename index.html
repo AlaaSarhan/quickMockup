@@ -38,12 +38,47 @@
     <div id="toolbar" class="quickMock__toolbar"></div>
     <div id="canvas" class="quickMock__canvas"></div>
 
-    <script type="text/javascript" src="/dist/libqmock.js"></script>
-    <script type="text/javascript" src="/lib/app.js"></script>
-    <script type="text/javascript">
-    document.addEventListener( 'DOMContentLoaded', function () {
-        init('toolbar', 'canvas')
-    } )
+    <!-- <script type="text/javascript" type="module"  src="/dist/libqmock.js"></script> -->
+    <!-- <script type="text/javascript" type="module" src="/src/app.js"></script> --> 
+    <script type="module">
+        import QuickMockupCanvas from './src/canvas.js' 
+        import createSidebarElement from './src/sidebar/sidebarElement.js'
+        
+        document.addEventListener( 'DOMContentLoaded', function () {
+            init('toolbar', 'canvas')
+        })
+        
+        function init( toobarId, canvasId ) {
+            // canvas
+            const app = new QuickMockupCanvas('canvas',1000,1000)
+            const win = new app.elements.Window({ title: "I'm window", width: 400, height: 400 })
+            const win2 = new app.elements.Window({ title: "I'm inside window", width: 200, height: 200 })
+            app.canvas.add(win2.main, 200, 200)
+            app.canvas.add(win.main, 100, 100)
+            app.canvas.add(new draw2d.shape.basic.Label({ text: "I'm inside inner window", bgColor: 'grey'}), 230, 230)
+
+            window.addEventListener('keyup', (e) => {
+            switch(e.key) {
+                case 'y':
+                    e.ctrlKey && app.canvas.getCommandStack().redo()
+                break
+                case 'z':
+                    e.ctrlKey && app.canvas.getCommandStack().undo()
+                break
+            }
+        })
+
+
+        // init toolbar
+        // add one representational dom element for each element type we have
+        // representations should
+        Object.keys(app.elements).forEach(key => {
+
+        })
+
+
+        }
+
     </script>
 </body>
 </html>
