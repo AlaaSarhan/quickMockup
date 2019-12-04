@@ -19,6 +19,7 @@
 
         .Toolbar {
             border-right: 1px solid grey;
+            display: inline-block;
             width: 256px;
             height: 100vh;
         }
@@ -58,7 +59,6 @@
         function init( toolbarId, canvasId ) {
             // canvas
             const app = new QuickMockupApp('canvas')
-            app.canvas.add((new app.elements.Window()).figure, 100, 100)
 
             window.addEventListener('keyup', (e) => {
                 switch(e.key) {
