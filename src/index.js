@@ -1,4 +1,4 @@
-import elements from './elements'
+import elements from './elements/index.js'
 
 function QuickMockupApp( canvasContainerId, width, height ) {
     this.elements = elements

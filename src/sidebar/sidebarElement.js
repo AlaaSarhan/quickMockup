@@ -1,20 +1,14 @@
-function createSidebarElement(type,canvas, jquery) {
+function createSidebarElement(type, dropCallback, jquery, className) {
 
     var $ = jQuery;
 
-    var sidebarElement= $("<div>")
+    var sidebarElement = $("<div>")
         .text(type)
         .draggable({
-            stop: function (event) {
-                //TODO: implement event handler for this event
-                canvas.fireEvent("newElementDrop",event) 
-            },
-            revert: true,
+            stop: dropCallback,
             helper: "clone"
         });
-    //if dropped, check if put on top of canvas
-    //if yes, call a functions on canvas to create element 
-    // at drop coordinates (function to be implemented)
+
     return sidebarElement;
 }
 

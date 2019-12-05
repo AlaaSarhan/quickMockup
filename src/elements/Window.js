@@ -1,4 +1,4 @@
-import Container from '../shape/composite/Container'
+import Container from '../shape/composite/Container.js'
 
 const titleLabelEditor = new draw2d.ui.LabelInplaceEditor()
 
@@ -7,8 +7,8 @@ function Window({
     title = 'Window',
     titleBarColor = '#333',
     titleBarBgColor = '#999',
-    width = 640,
-}) {
+    width = 640
+} = {}) {
     this.name = 'quickMockup.Window'
 
     this.titleBarLabel = new draw2d.shape.basic.Label({
@@ -21,14 +21,14 @@ function Window({
     })
     this.titleBarLabel.on('dblclick', () => { titleLabelEditor.start(this.titleBarLabel) })
 
-    this.main = new Container({
+    this.figure = new Container({
         bgColor: 'rgba(255, 255, 255, .5)',
         stroke: 1,
         width,
         height
     })
 
-    this.main.add(this.titleBarLabel, new draw2d.layout.locator.XYAbsPortLocator(0, 0))
+    this.figure.add(this.titleBarLabel, new draw2d.layout.locator.XYAbsPortLocator(0, 0))
 }
 
 export default Window

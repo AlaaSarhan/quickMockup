@@ -17,14 +17,24 @@
             overflow: hidden;
         }
 
-        .quickMock__toolbar {
+        .Toolbar {
             border-right: 1px solid grey;
             display: inline-block;
             width: 256px;
             height: 100vh;
         }
 
-        .quickMock__canvas {
+        .Toolbar__element {
+            background: #CCC;
+            border: 1px solid grey;
+            margin: 16px;
+            padding: 16px;
+            text-align: center;
+            user-select: none;
+            width: 160px;
+        }
+
+        .Canvas {
             display: inline-block;
             position: absolute;
             left: 256px;
@@ -35,27 +45,20 @@
     </style>
 </head>
 <body>
-    <div id="toolbar" class="quickMock__toolbar"></div>
-    <div id="canvas" class="quickMock__canvas"></div>
+    <div id="toolbar" class="Toolbar"></div>
+    <div id="canvas" class="Canvas"></div>
 
-    <!-- <script type="text/javascript" type="module"  src="/dist/libqmock.js"></script> -->
-    <!-- <script type="text/javascript" type="module" src="/src/app.js"></script> --> 
     <script type="module">
-        import QuickMockupApp from './src/app.js' 
+        import QuickMockupApp from './src/app.js'
         import createSidebarElement from './src/sidebar/sidebarElement.js'
-        
+
         document.addEventListener( 'DOMContentLoaded', function () {
             init('toolbar', 'canvas')
         })
-        
+
         function init( toolbarId, canvasId ) {
             // canvas
-            const app = new QuickMockupApp('canvas',1000,1000)
-            const win = new app.elements.Window({ title: "I'm window", width: 400, height: 400 })
-            const win2 = new app.elements.Window({ title: "I'm inside window", width: 200, height: 200 })
-            app.canvas.add(win2.main, 200, 200)
-            app.canvas.add(win.main, 100, 100)
-            app.canvas.add(new draw2d.shape.basic.Label({ text: "I'm inside inner window", bgColor: 'grey'}), 230, 230)
+            const app = new QuickMockupApp('canvas')
 
             window.addEventListener('keyup', (e) => {
                 switch(e.key) {
@@ -70,17 +73,15 @@
 
             // init toolbar
             // add one representational dom element for each element type we have
-            // representations should
+            const $toolbar = $('#'+toolbarId)
             Object.keys(app.elements).forEach(key => {
-                $('#'+toolbarId).append(createSidebarElement(key,app.canvas,jQuery))
+                const elementDiv = createSidebarElement(key, event => {
+                    app.canvas.fireEvent('newElementDrop', { key, event })
+                })
+                elementDiv.addClass('Toolbar__element')
+                $toolbar.append(elementDiv)
             })
         }
-
-
-
-
-
-
     </script>
 </body>
 </html>
